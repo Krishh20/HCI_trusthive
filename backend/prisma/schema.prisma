@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id         String               @id @default(uuid())
+  name            String               @db.VarChar(100)
+  email           String               @unique @db.VarChar(255)
+  password        String
+  created_at      DateTime             @default(now())
+  comments        Comment[]
+  password_resets PasswordResetToken[]
+  ratings         Rating[]
+  recommendations Recommendation[]
+  votes           Vote[]
+
+  @@map("users")
+}
+
+model OtpVerification {
+  otp_id        String   @id @default(uuid())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(255)
+  password_hash String
+  otp_hash      String
+  expires_at    DateTime
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@index([expires_at])
+  @@map("otp_verifications")
+}
+
+model PasswordResetToken {
+  reset_id   String   @id @default(uuid())
+  user_id    String
+  token_hash String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([expires_at])
+  @@map("password_reset_tokens")
+}
+
+model Recommendation {
+  recommendation_id  String             @id @default(uuid())
+  title              String             @db.VarChar(200)
+  description        String
+  type               RecommendationType
+  price_range        Int?
+  safety_description String?
+  created_by         String
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  location           String?            @db.VarChar(255)
+  best_time_to_visit String?            @db.VarChar(255)
+  image_urls         String[]           @default([])
+  comments           Comment[]
+  ratings            Rating[]
+  author             User               @relation(fields: [created_by], references: [user_id], onDelete: Cascade)
+  votes              Vote[]
+
+  @@index([created_by])
+  @@index([type])
+  @@map("recommendations")
+}
+
+model Rating {
+  rating_id         String         @id @default(uuid())
+  user_id           String
+  recommendation_id String
+  price_rating      Int
+  quality_rating    Int
+  safety_rating     Int
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  recommendation    Recommendation @relation(fields: [recommendation_id], references: [recommendation_id], onDelete: Cascade)
+  user              User           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([user_id, recommendation_id])
+  @@index([recommendation_id])
+  @@map("ratings")
+}
+
+model Comment {
+  comment_id        String         @id @default(uuid())
+  user_id           String
+  recommendation_id String
+  comment_text      String
+  is_anonymous      Boolean        @default(false)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+  recommendation    Recommendation @relation(fields: [recommendation_id], references: [recommendation_id], onDelete: Cascade)
+  user              User           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([recommendation_id])
+  @@index([user_id])
+  @@map("comments")
+}
+
+model Vote {
+  vote_id           String         @id @default(uuid())
+  user_id           String
+  recommendation_id String
+  vote_type         VoteType
+  created_at        DateTime       @default(now())
+  recommendation    Recommendation @relation(fields: [recommendation_id], references: [recommendation_id], onDelete: Cascade)
+  user              User           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([user_id, recommendation_id])
+  @@index([recommendation_id])
+  @@map("votes")
+}
+
+enum RecommendationType {
+  food
+  travel
+  study_spot
+  service
+  entertainment
+  shopping
+  health_and_fitness
+  other
+}
+
+enum VoteType {
+  upvote
+  downvote
+}
