@@ -5,20 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useAppAuth } from "@/hooks/use-app-auth";
 
-
-function IconPlus(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M12 5v14M5 12h14"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function IconUser(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
@@ -39,23 +25,22 @@ function IconUser(props) {
   );
 }
 
-function NavItem({ href, label, icon: Icon }) {
+function NavItem({ href, label }) {
   const pathname = usePathname();
-  const active = pathname === href;
+  const active = pathname === href || (href !== "/" && pathname?.startsWith(href));
 
   return (
     <Link
       href={href}
       className={[
-        "inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition",
+        "font-medium transition-colors",
         active
-          ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
-          : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-zinc-50",
+          ? "text-indigo-600"
+          : "text-gray-600 hover:text-indigo-600",
       ].join(" ")}
       aria-current={active ? "page" : undefined}
     >
-      <Icon className="h-4 w-4" />
-      <span>{label}</span>
+      {label}
     </Link>
   );
 }
@@ -69,30 +54,40 @@ export default function Header() {
     router.refresh();
   }
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-        <Link
-          href="/"
-          className="text-lg font-semibold tracking-tight text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-        >
-          TrustHive
-        </Link>
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <div className="flex justify-between items-center px-6 py-3">
+        <div className="flex-1 flex justify-start">
+          <Link
+            href="/"
+            className="text-xl font-bold tracking-tight text-indigo-600"
+          >
+            TrustHive
+          </Link>
+        </div>
 
-        <nav className="flex items-center gap-2">
-          <NavItem href="/" label="Home" icon={IconUser} />
-          <NavItem href="/recommendations/new" label="Add" icon={IconPlus} />
-          <NavItem href="/profile" label="Profile" icon={IconUser} />
-
-          {!loading && user ? (
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="ml-2 hidden rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:inline-flex"
-            >
-              Log out
-            </button>
-          ) : null}
+        <nav className="flex items-center justify-center gap-8 flex-1">
+          <NavItem href="/" label="Home" />
+          <NavItem href="/recommendations/new" label="Recommend" />
         </nav>
+
+        <div className="flex-1 flex justify-end items-center gap-4">
+          {!loading && user ? (
+            <>
+              <Link href="/profile" className="group" aria-label="Profile">
+                <div className="w-9 h-9 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-100 transition-colors">
+                  <IconUser className="w-5 h-5" />
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                Log out
+              </button>
+            </>
+          ) : null}
+        </div>
       </div>
     </header>
   );

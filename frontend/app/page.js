@@ -121,44 +121,67 @@ function Stars({ value, outOf = 5, size = "h-4 w-4", interactive = false, onChan
 
 function RecommendationCardModern({ rec }) {
   return (
-    <Link href={rec.href} className="block">
-      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-zinc-900/20 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700">
+    <Link href={rec.href} className="block group">
+      <article className="bg-white rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 overflow-hidden h-full flex flex-col border border-transparent">
         {rec.imageUrl ? (
-          <div className="mb-4 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-            <img src={rec.imageUrl} alt={rec.title} className="h-44 w-full object-cover" loading="lazy" />
+          <div className="relative h-40 sm:h-48 overflow-hidden bg-gray-100 shrink-0 border-b border-gray-100">
+            <img 
+              src={rec.imageUrl} 
+              alt={rec.title} 
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+              loading="lazy" 
+            />
+            <div className="absolute top-3 left-3 bg-white/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 shadow-sm">
+              {rec.category}
+            </div>
+            <div className="absolute top-3 right-3 text-xs font-medium text-white shadow-sm drop-shadow-md">
+              {rec.date}
+            </div>
           </div>
-        ) : null}
-        <div className="flex items-center justify-between gap-3">
-          <CategoryBadge category={rec.category} />
-          <time className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            {rec.date}
-          </time>
-        </div>
+        ) : (
+          <div className="relative h-40 sm:h-48 overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50 shrink-0 flex items-center justify-center border-b border-gray-100/50">
+            <span className="text-indigo-200 font-medium">No Image</span>
+            <div className="absolute top-3 left-3 bg-white/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 shadow-sm">
+              {rec.category}
+            </div>
+            <div className="absolute top-3 right-3 text-xs font-medium text-gray-500">
+              {rec.date}
+            </div>
+          </div>
+        )}
 
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold text-zinc-950 group-hover:text-zinc-900 dark:text-zinc-50">
+        <div className="p-5 flex flex-col flex-1">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
             {rec.title}
           </h3>
-          <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
+          <p className="mt-2 text-sm text-gray-500 line-clamp-2">
             {rec.description}
           </p>
-        </div>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            <IconLocation className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
-            <span>{rec.location || rec.priceRange}</span>
-          </div>
+          <div className="mt-auto pt-4 space-y-3">
+            <div className="flex items-center justify-between text-sm text-gray-500">
+              <div className="flex items-center gap-1.5 line-clamp-1">
+                <IconLocation className="h-4 w-4 shrink-0" />
+                <span className="truncate">{rec.location || "N/A"}</span>
+              </div>
+              <span className="shrink-0 font-medium text-xs">{rec.priceRange}</span>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <Stars value={rec.overallStars} />
-            <div className="flex items-baseline gap-1">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                {Number(rec.overallRating).toFixed(1)}
-              </span>
-              <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                {rec.ratingCount} ratings
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-50">
+              <div className="flex items-center gap-1.5">
+                <Stars value={rec.overallStars} size="h-3.5 w-3.5" />
+                <div className="flex items-baseline gap-1 text-xs">
+                  <span className="font-semibold text-gray-900">
+                    {Number(rec.overallRating).toFixed(1)}
+                  </span>
+                  <span className="text-gray-500">
+                    ({rec.ratingCount})
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center text-xs font-medium text-indigo-600 group-hover:text-indigo-700 transition-colors">
+                Read more <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
+              </div>
             </div>
           </div>
         </div>
@@ -394,30 +417,51 @@ export default function Home() {
   }, [cards, category, searchDraft, priceLevel, qualityLevel, safetyLevel]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8">
-      <section className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:p-8">
-        <div className="flex flex-col gap-6">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-3xl">
-              Campus Community Recommendations
-            </h1>
-            <p className="mt-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Discover trusted picks from your campus — curated by the community.
-            </p>
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 min-h-screen">
+      {/* HERO SECTION */}
+      <section className="rounded-3xl bg-gradient-to-r from-purple-100 via-indigo-100 to-pink-100 p-10 sm:p-16 shadow-lg shadow-indigo-100/50 mb-12 relative overflow-hidden">
+        {/* subtle glow effect via an absolute div */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/40 blur-3xl rounded-full pointer-events-none"></div>
+        
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <div className="inline-flex items-center justify-center rounded-full bg-white/60 backdrop-blur px-4 py-1.5 text-sm font-medium text-indigo-800 mb-6 shadow-sm">
+            ✨ Community Powered
           </div>
+          
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-4">
+            Campus Community<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              Recommendations
+            </span>
+          </h1>
+          
+          <p className="mt-4 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+            Discover trusted picks from your campus — curated by the community for the community.
+          </p>
 
-          <div className="flex flex-col gap-3">
-            <div className="relative">
-              <input
-                type="search"
-                placeholder="Search recommendations…"
-                value={searchDraft}
-                onChange={(e) => setSearchDraft(e.target.value)}
-                className="h-12 w-full rounded-full border border-zinc-200 bg-white px-5 text-sm font-medium text-zinc-950 shadow-sm outline-none ring-zinc-900/10 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:ring-zinc-100/10"
-              />
+          <div className="w-full max-w-xl relative">
+            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
             </div>
+            <input
+              type="search"
+              placeholder="Search recommendations..."
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+              className="w-full rounded-full border-0 bg-white shadow-md pl-12 pr-6 py-4 text-base text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow transition-colors placeholder:text-gray-400"
+            />
+          </div>
+        </div>
+      </section>
 
-            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+      {/* DISCOVERY FEED & FILTERS */}
+      <section className="mb-8">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 className="text-2xl font-bold text-gray-900">Discovery Feed</h2>
+            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
               {FILTER_OPTIONS.map((opt) => {
                 const active = opt === category;
                 return (
@@ -426,10 +470,10 @@ export default function Home() {
                     type="button"
                     onClick={() => setCategory(opt)}
                     className={[
-                      "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition",
+                      "shrink-0 rounded-full px-5 py-2 text-xs sm:text-sm font-medium transition-all duration-200",
                       active
-                        ? "bg-zinc-900 text-white"
-                        : "border border-zinc-200 bg-white text-zinc-800 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900",
+                        ? "bg-indigo-600 text-white shadow-md hover:scale-105"
+                        : "bg-white border border-gray-200 text-gray-700 hover:scale-105 hover:border-indigo-300 hover:text-indigo-600",
                     ].join(" ")}
                     aria-pressed={active}
                   >
@@ -438,40 +482,41 @@ export default function Home() {
                 );
               })}
             </div>
-            {isFilterVisible ? (
-              <FilterRow
-                priceLevel={priceLevel}
-                qualityLevel={qualityLevel}
-                safetyLevel={safetyLevel}
-                onPriceChange={setPriceLevel}
-                onQualityChange={setQualityLevel}
-                onSafetyChange={setSafetyLevel}
-              />
-            ) : null}
           </div>
+          {isFilterVisible ? (
+             <FilterRow
+                 priceLevel={priceLevel}
+                 qualityLevel={qualityLevel}
+                 safetyLevel={safetyLevel}
+                 onPriceChange={setPriceLevel}
+                 onQualityChange={setQualityLevel}
+                 onSafetyChange={setSafetyLevel}
+             />
+          ) : null}
         </div>
       </section>
 
-      <section className="mt-8">
+      {/* POSTS GRID */}
+      <section className="mb-16">
         {loading ? (
-          <div className="grid gap-5 sm:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-44 animate-pulse rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950"
+                className="h-80 animate-pulse rounded-2xl bg-gray-200"
               />
             ))}
           </div>
         ) : error ? (
-          <p className="rounded-2xl border border-zinc-200 bg-white p-4 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200">
+          <p className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
             {error}
           </p>
         ) : visible.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            No recommendations match your filters.
-          </p>
+          <div className="py-12 text-center bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <p className="text-gray-500">No recommendations match your filters.</p>
+          </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {visible.map((rec) => (
               <RecommendationCardModern
                 key={rec.recommendationId}
@@ -480,6 +525,27 @@ export default function Home() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* CTA SECTION */}
+      <section className="rounded-3xl bg-gradient-to-r from-purple-500 to-indigo-500 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-indigo-200/50">
+        <div className="flex items-center gap-4 text-white text-center md:text-left">
+          <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center shrink-0 backdrop-blur hidden sm:flex">
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold">Share your campus secrets</h3>
+            <p className="mt-1 text-indigo-100 text-sm">Help others discover the best spots around campus.</p>
+          </div>
+        </div>
+        <Link 
+          href="/recommendations/new"
+          className="shrink-0 bg-white text-indigo-600 font-semibold rounded-full px-8 py-3 shadow-md hover:scale-105 hover:shadow-lg transition-all duration-300"
+        >
+          Share Your Pick
+        </Link>
       </section>
     </main>
   );

@@ -72,10 +72,23 @@ export default function VerifyOtpPage() {
           />
         </label>
 
-        <button
+        {/* <button
           type="submit"
           disabled={pending}
           className="mt-2 rounded-lg bg-zinc-900 py-2.5 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          {pending ? "Verifying…" : "Verify and continue"}
+        </button> */}
+
+        <button
+          type="submit"
+          disabled={pending}
+          className="mt-2 rounded-lg bg-gradient-to-r from-[#6A0DAD] to-[#484AAA] py-2.5 text-sm font-medium text-white
+          transition-all duration-300 ease-in-out
+          hover:from-[#7B1FD1] hover:to-[#5A5FD6]
+          hover:shadow-lg hover:scale-[1.02]
+          active:scale-[0.98]
+          disabled:opacity-60"
         >
           {pending ? "Verifying…" : "Verify and continue"}
         </button>

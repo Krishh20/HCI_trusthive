@@ -117,13 +117,7 @@ function formatPriceRange(priceRange) {
   };
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-10">
-      <Link
-        href="/"
-        className="text-sm font-semibold text-blue-700 hover:underline dark:text-blue-300"
-      >
-        ← Back
-      </Link>
+    <main className="mx-auto w-full max-w-4xl px-4 py-8">
 
       <RecommendationDetailsClient rec={rec} />
     </main>

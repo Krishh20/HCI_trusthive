@@ -18,7 +18,7 @@ const TYPE_OPTIONS = [
 
 export default function NewRecommendationPage() {
   const { data: session, status } = useSession();
-const token = session?.accessToken;
+  const token = session?.accessToken;
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -88,7 +88,7 @@ const token = session?.accessToken;
     }
   }
 
-  if (status === "loading" || !session){
+  if (status === "loading" || !session) {
     return (
       <main className="mx-auto max-w-2xl px-4 py-12">
         <p className="text-zinc-500">Loading…</p>
@@ -97,134 +97,211 @@ const token = session?.accessToken;
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 py-10">
-      <header className="mx-auto max-w-2xl text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Add Recommendation
+    <main className="mx-auto w-full max-w-4xl px-4 py-12 min-h-screen">
+      {/* 1. TOP HEADER SECTION */}
+      <header className="flex flex-col items-center justify-center text-center mb-8">
+        <div className="inline-flex items-center justify-center rounded-full bg-purple-100 text-purple-600 px-3 py-1 text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+          Share The Circle
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 mb-3">
+          Share A <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Discovery</span>
         </h1>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          Share a place, service, or experience with the campus community
+        <p className="text-sm sm:text-base text-gray-500 mt-2 max-w-xl mx-auto">
+          Add your favorite spot, service, or hidden gem to the community map.
         </p>
       </header>
 
-      <section className="mx-auto mt-8 max-w-2xl rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:p-8">
-        <form onSubmit={onSubmit} className="flex flex-col gap-5">
-        {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950/50 dark:text-red-200">
-            {error}
-          </p>
-        )}
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Title
-          <input
-            name="title"
-            required
-            minLength={3}
-            maxLength={200}
-            placeholder="e.g. Best Coffee Shop Near Campus"
-            className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
-          />
-        </label>
+      {/* 2. FORM CONTAINER (MAIN CARD) */}
+      <section className="bg-white rounded-3xl shadow-xl p-6 md:p-8 max-w-3xl mx-auto border border-gray-100">
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Description (min 10 characters)
-          <textarea
-            name="description"
-            required
-            minLength={10}
-            maxLength={5000}
-            rows={6}
-            placeholder="Tell others what makes this special…"
-            className="rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
-          />
-        </label>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Type
-            <select
-              name="type"
-              required
-              defaultValue=""
-              className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
-            >
-              <option value="" disabled>
-                Select type
-              </option>
-              {TYPE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Price Range
-            <input
-              name="price_range"
-              type="number"
-              min={1}
-              step={1}
-              placeholder="e.g. 2"
-              className="h-11 appearance-none rounded-2xl border border-zinc-200 bg-white px-4 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-            />
-          </label>
+        {/* 3. FORM HEADER */}
+        <div className="mb-8 border-b border-gray-50 pb-4">
+          <span className="text-xs font-bold uppercase tracking-wide text-gray-400 block mb-1">
+            Post Guidelines Active
+          </span>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Recommendation Details
+          </h2>
         </div>
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Location (optional)
-          <input
-            name="location"
-            maxLength={255}
-            placeholder="e.g. Near Main Gate, IIITM"
-            className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
-          />
-        </label>
+        <form onSubmit={onSubmit} className="flex flex-col space-y-6">
+          {error && (
+            <div className="rounded-xl bg-red-50 p-4 text-sm text-red-800 border border-red-100 flex items-center gap-3">
+              <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span>{error}</span>
+            </div>
+          )}
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Pictures
-          <input
-            name="images"
-            type="file"
-            accept="image/*"
-            multiple
-            className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900 shadow-sm outline-none ring-blue-600/20 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:file:bg-blue-950/40 dark:file:text-blue-300"
-          />
-        </label>
+          {/* TITLE field */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Title
+            </label>
+            <input
+              name="title"
+              required
+              minLength={3}
+              maxLength={200}
+              placeholder="e.g. Best Coffee Shop Near Campus"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400"
+            />
+          </div>
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Best Time to Visit
-          <input
-            name="best_time_to_visit"
-            placeholder="e.g. Weekday mornings"
-            className="h-11 rounded-2xl border border-zinc-200 bg-white px-4 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
-          />
-        </label>
+          {/* DESCRIPTION field */}
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Description
+              </label>
+              <span className="text-xs text-gray-400 font-medium">min 10 characters</span>
+            </div>
+            <textarea
+              name="description"
+              required
+              minLength={10}
+              maxLength={5000}
+              rows={5}
+              placeholder="Tell others what makes this special…"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400 resize-y"
+            />
+          </div>
 
-        <label className="flex flex-col gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Safety Description
-          <textarea
-            name="safety_description"
-            maxLength={1000}
-            rows={3}
-            placeholder="Any safety tips or info…"
-            className="rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 shadow-sm outline-none ring-blue-600/20 placeholder:text-zinc-400 focus:ring-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
-          />
-        </label>
+          {/* CATEGORY + PRICE RANGE grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Category
+              </label>
+              <div className="relative">
+                <select
+                  name="type"
+                  required
+                  defaultValue=""
+                  className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer"
+                >
+                  <option value="" disabled>Select category</option>
+                  {TYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </div>
+            </div>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="mt-2 w-full rounded-2xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-60"
-        >
-          {pending
-            ? uploadingCount > 0
-              ? `Uploading ${uploadingCount} image(s)…`
-              : "Submitting…"
-            : "Submit Recommendation"}
-        </button>
-      </form>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Price Level
+              </label>
+              <input
+                name="price_range"
+                type="number"
+                min={1}
+                step={1}
+                placeholder="e.g. 200"
+                className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
+            </div>
+          </div>
+
+          {/* LOCATION field */}
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Location (optional)
+            </label>
+            <input
+              name="location"
+              maxLength={255}
+              placeholder="e.g. Near Main Gate, IIITM"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400"
+            />
+          </div>
+
+          {/* BEST TIME + SAFETY INFO grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2 h-full">
+              <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Best Time to Visit
+              </label>
+              <input
+                name="best_time_to_visit"
+                placeholder="e.g. Weekday mornings"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400 h-full"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                Safety Description
+              </label>
+              <textarea
+                name="safety_description"
+                maxLength={1000}
+                rows={2}
+                placeholder="Any safety tips or info…"
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-gray-400 resize-y"
+              />
+            </div>
+          </div>
+
+          {/* IMAGE UPLOAD SECTION */}
+          <div className="flex flex-col gap-2 pt-2">
+            <label className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Photos
+            </label>
+            <div className="relative group flex flex-col items-center justify-center w-full rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 py-10 transition-colors hover:border-indigo-400 hover:bg-indigo-50">
+              <svg className="w-10 h-10 text-indigo-400 mb-3 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              <p className="text-sm font-medium text-gray-700">Click to upload photos</p>
+              <p className="text-xs text-gray-500 mt-1 mb-4">PNG, JPG, GIF up to 500 KB</p>
+              <div className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-600 shadow-sm group-hover:border-indigo-300 group-hover:text-indigo-600 transition-colors">
+                Choose Files
+              </div>
+              <input
+                name="images"
+                type="file"
+                accept="image/*"
+                multiple
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                title="Choose files"
+              />
+            </div>
+          </div>
+
+          {/* PRIMARY BUTTON */}
+          <div className="pt-6 border-t border-gray-50">
+            <button
+              type="submit"
+              disabled={pending}
+              className="w-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 py-3.5 text-base font-semibold text-white shadow-md hover:shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 flex justify-center items-center"
+            >
+              {pending
+                ? uploadingCount > 0
+                  ? <span className="flex items-center gap-2"><svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Uploading {uploadingCount} image(s)…</span>
+                  : <span className="flex items-center gap-2"><svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Publishing…</span>
+                : "Publish Recommendation"}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* 7. FOOTER TIP SECTION */}
+      <section className="max-w-3xl mx-auto mt-6 rounded-2xl bg-gray-900 text-white p-5 flex items-start sm:items-center gap-4 shadow-lg shadow-gray-900/20">
+        <div className="shrink-0 p-2 rounded-xl bg-gray-800/80 text-yellow-400">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-100">Pro-Tip for Great Posts</h4>
+          <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+            Including appealing photos and a detailed reason why you recommend this spot increases community trust and views!
+          </p>
+        </div>
       </section>
     </main>
   );
