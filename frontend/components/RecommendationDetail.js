@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+import { useAppAuth } from "@/hooks/use-app-auth";
 import { apiJson } from "@/lib/api";
 import { typeLabel } from "@/lib/recommendations";
 
 export default function RecommendationDetail({ id }) {
-  const { token, user } = useAuth();
+  const { user, userId, token } = useAppAuth();
   const router = useRouter();
   const [rec, setRec] = useState(null);
   const [error, setError] = useState("");
@@ -127,7 +127,7 @@ export default function RecommendationDetail({ id }) {
     );
   }
 
-  const isOwner = user && rec.created_by === user.user_id;
+  const isOwner = user && rec.created_by === userId;
   const votes = rec.votes ?? { upvote: 0, downvote: 0 };
 
   return (

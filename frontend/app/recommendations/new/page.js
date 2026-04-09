@@ -2,8 +2,8 @@
 import { uploadImage } from "@/utils/uploadImage";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
 import { apiJson } from "@/lib/api";
+import { useSession } from "next-auth/react";
 
 const TYPE_OPTIONS = [
   { value: "food", label: "Food" },
@@ -17,17 +17,18 @@ const TYPE_OPTIONS = [
 ];
 
 export default function NewRecommendationPage() {
-  const { token, loading } = useAuth();
+  const { data: session, status } = useSession();
+const token = session?.accessToken;
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [uploadingCount, setUploadingCount] = useState(0);
 
   useEffect(() => {
-    if (!loading && !token) {
+    if (status !== "loading" && !session) {
       router.replace("/login");
     }
-  }, [loading, token, router]);
+  }, [status, session, router]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -87,7 +88,7 @@ export default function NewRecommendationPage() {
     }
   }
 
-  if (loading || !token) {
+  if (status === "loading" || !session){
     return (
       <main className="mx-auto max-w-2xl px-4 py-12">
         <p className="text-zinc-500">Loading…</p>

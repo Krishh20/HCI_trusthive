@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+import { useAppAuth } from "@/hooks/use-app-auth";
 import Header from "@/components/Header";
 
 const AUTH_ROUTES = new Set(["/login", "/register", "/verify-otp", "/forgot-password", "/reset-password"]);
@@ -10,26 +10,26 @@ const AUTH_ROUTES = new Set(["/login", "/register", "/verify-otp", "/forgot-pass
 export default function AppChrome({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { loading, isAuthenticated } = useAppAuth();
   const isAuthRoute = AUTH_ROUTES.has(pathname);
 
   useEffect(() => {
-    if (!loading && !user && !isAuthRoute) {
+    if (!loading && !isAuthenticated && !isAuthRoute) {
       router.replace("/login");
     }
-  }, [loading, user, isAuthRoute, router]);
+  }, [loading, isAuthenticated, isAuthRoute, router]);
 
   if (loading) {
     return <div className="flex-1" />;
   }
 
-  if (!user && !isAuthRoute) {
+  if (!isAuthenticated && !isAuthRoute) {
     return <div className="flex-1" />;
   }
 
   return (
     <>
-      {!isAuthRoute && user ? <Header /> : null}
+      {!isAuthRoute && isAuthenticated ? <Header /> : null}
       <div className="flex-1">{children}</div>
     </>
   );

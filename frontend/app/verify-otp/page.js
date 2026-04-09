@@ -3,13 +3,11 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
 import { apiJson } from "@/lib/api";
 
 export default function VerifyOtpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { applySession } = useAuth();
   const prefillEmail = useMemo(() => searchParams.get("email") ?? "", [searchParams]);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -22,12 +20,11 @@ export default function VerifyOtpPage() {
     const email = String(fd.get("email") ?? "").trim();
     const otp = String(fd.get("otp") ?? "").trim();
     try {
-      const data = await apiJson("/api/v1/auth/verify-otp", {
+      await apiJson("/api/v1/auth/verify-otp", {
         method: "POST",
         body: JSON.stringify({ email, otp }),
       });
-      applySession({ token: data.token, user: data.user });
-      router.push("/");
+      router.push(`/login?verified=1&email=${encodeURIComponent(email)}`);
       router.refresh();
     } catch (err) {
       setError(err.message || "OTP verification failed");

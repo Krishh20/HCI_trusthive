@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+import { useAppAuth } from "@/hooks/use-app-auth";
 import { apiJson } from "@/lib/api";
 
 function Stars({ value, outOf = 5, interactive = false, onChange }) {
@@ -105,7 +105,7 @@ function RatingRow({ label, value, outOf = 5 }) {
 }
 
 export default function RecommendationDetailsClient({ rec }) {
-  const { user, token } = useAuth();
+  const { user, userId, token } = useAppAuth();
   const router = useRouter();
 
   const [avgRatings, setAvgRatings] = useState({
@@ -181,7 +181,7 @@ export default function RecommendationDetailsClient({ rec }) {
           text: c.comment_text,
         }))
       );
-      const myRating = ratings.find((r) => r.user_id === user?.user_id);
+      const myRating = ratings.find((r) => r.user_id === userId);
       setRatingId(myRating?.rating_id ?? null);
       if (myRating) {
         setPriceStars(Number(myRating.price_rating) || 0);
@@ -201,7 +201,7 @@ export default function RecommendationDetailsClient({ rec }) {
     if (!token) return;
     syncRecommendation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, rec.recommendationId, user?.user_id]);
+  }, [token, rec.recommendationId, userId]);
 
   useEffect(() => {
     if (editingPost && titleInputRef.current) {
@@ -216,7 +216,7 @@ export default function RecommendationDetailsClient({ rec }) {
   }, [avgRatings]);
 
   const overallRatingCount = Number(ratingCount ?? 0) || 0;
-  const canEditPost = Boolean(user?.user_id && rec.createdBy === user.user_id);
+  const canEditPost = Boolean(userId && rec.createdBy === userId);
 
   function formatDate(d) {
     const year = d.getFullYear();
@@ -570,7 +570,7 @@ export default function RecommendationDetailsClient({ rec }) {
               ) : (
                 <p className="mt-3 text-sm font-medium leading-7 text-zinc-700 dark:text-zinc-300">{c.text}</p>
               )}
-              {user?.user_id && c.userId === user.user_id ? (
+              {userId && c.userId === userId ? (
                 <div className="mt-2 flex gap-2">
                   <button type="button" onClick={() => { setCommentEditId(c.id); setCommentEditText(c.text); }} className="text-xs font-semibold text-blue-700">Edit</button>
                   <button type="button" onClick={() => deleteComment(c.id)} className="text-xs font-semibold text-red-700">Delete</button>

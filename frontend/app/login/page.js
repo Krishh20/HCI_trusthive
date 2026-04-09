@@ -3,19 +3,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
-import { apiJson } from "@/lib/api";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginPage() {
-  const { applySession } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status } = useSession();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const verified = searchParams.get("verified") === "1";
+  const authError = searchParams.get("error");
 
   // 🔥 Always reset state when page loads
   useEffect(() => {
@@ -23,32 +26,54 @@ export default function LoginPage() {
     setPassword("");
   }, []);
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/");
+      router.refresh();
+    }
+  }, [status, router]);
+
   async function onSubmit(e) {
     e.preventDefault();
     setError("");
     setPending(true);
 
     try {
-      const data = await apiJson("/api/v1/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
       });
 
-      applySession({ token: data.token, user: data.user });
+      if (result?.error) {
+        throw new Error("Invalid email or password");
+      }
 
       // ✅ clear inputs after success
       setEmail("");
       setPassword("");
 
-      router.replace("/");
+      router.replace(result?.url || "/");
       router.refresh();
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Unable to sign in");
 
       // ✅ clear only password on failure
       setPassword("");
     } finally {
       setPending(false);
+    }
+  }
+
+  async function onGoogleSignIn() {
+    setError("");
+    setGooglePending(true);
+    try {
+      await signIn("google", { callbackUrl: "/" });
+    } catch {
+      setError("Unable to start Google sign-in. Please try again.");
+      setGooglePending(false);
     }
   }
 
@@ -67,6 +92,17 @@ export default function LoginPage() {
           Register
         </Link>
       </p>
+
+      {verified ? (
+        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
+          OTP verified successfully. Please log in.
+        </p>
+      ) : null}
+      {authError === "AccessDenied" ? (
+        <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800 dark:bg-red-950/50 dark:text-red-200">
+          Only campus email IDs are allowed.
+        </p>
+      ) : null}
 
       <form
         onSubmit={onSubmit}
@@ -131,6 +167,21 @@ export default function LoginPage() {
           {pending ? "Signing in…" : "Sign in"}
         </button>
       </form>
+
+      <div className="my-6 flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" />
+        <span>OR</span>
+        <span className="h-px flex-1 bg-zinc-300 dark:bg-zinc-700" />
+      </div>
+
+      <button
+        type="button"
+        onClick={onGoogleSignIn}
+        disabled={googlePending}
+        className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-800 disabled:opacity-60 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
+      >
+        {googlePending ? "Redirecting to Google…" : "Sign in with Google"}
+      </button>
     </main>
   );
 }

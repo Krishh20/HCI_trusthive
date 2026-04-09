@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+import { signOut } from "next-auth/react";
+import { useAppAuth } from "@/hooks/use-app-auth";
 
 
 function IconPlus(props) {
@@ -60,11 +61,11 @@ function NavItem({ href, label, icon: Icon }) {
 }
 
 export default function Header() {
-  const { user, loading, logout } = useAuth();
+  const { loading, user } = useAppAuth();
   const router = useRouter();
-  function handleLogout() {
-    logout();
-    router.push("/login");
+  async function handleLogout() {
+    await signOut({ redirect: false });
+    router.replace("/login");
     router.refresh();
   }
   return (
@@ -85,8 +86,7 @@ export default function Header() {
           {!loading && user ? (
             <button
               type="button"
-             // onClick={() => logout()}
-             onClick={handleLogout}
+              onClick={handleLogout}
               className="ml-2 hidden rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:inline-flex"
             >
               Log out

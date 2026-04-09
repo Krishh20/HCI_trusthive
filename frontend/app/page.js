@@ -237,44 +237,39 @@ function computeAverageMetric(ratings, key) {
   return Math.round((total / list.length) * 10) / 10;
 }
 
-function toPriceBucket(priceTier) {
-  const tier = Number(priceTier);
-  if (!Number.isFinite(tier) || tier <= 0) return "budget";
-  if (tier <= 2) return "budget";
-  if (tier <= 4) return "mid";
-  return "premium";
-}
-
-function matchesPriceFilter(rec, selectedPrice) {
-  if (selectedPrice === "all") return true;
-  return rec.priceBucket === selectedPrice;
-}
-
-function matchesQualityFilter(rec, selectedQuality) {
-  if (selectedQuality === "all") return true;
-  if (selectedQuality === "3plus") return rec.avgQuality >= 3;
-  if (selectedQuality === "4plus") return rec.avgQuality >= 4;
-  if (selectedQuality === "5") return rec.avgQuality >= 5;
+function checkQuality(r, level) {
+  const l = level.toLowerCase();
+  if (level === "all") return true;
+  if (level === "high") return r.avgQuality >= 4;
+  if (level === "moderate") return r.avgQuality >= 3;
+  if (level === "low") return r.avgQuality >= 1;
   return true;
 }
 
-function toSafetyLabel(avgSafety) {
-  if (avgSafety >= 4) return "safe";
-  if (avgSafety >= 2.5) return "moderate";
-  return "risky";
+function checkSafety(r, level) {
+  const l = level.toLowerCase();
+  if (level === "all") return true;
+  if (level === "high") return r.avgSafety >= 4;
+  if (level === "moderate") return r.avgSafety >= 3;
+  if (level === "low") return r.avgSafety >= 1;
+  return true;
 }
 
-function matchesSafetyFilter(rec, selectedSafety) {
-  if (selectedSafety === "all") return true;
-  return toSafetyLabel(rec.avgSafety) === selectedSafety;
+function checkPrice(r, level) {
+  const l = level.toLowerCase();
+  if (level === "all") return true;
+  if (level === "high") return r.avgPrice >= 4;
+  if (level === "moderate") return r.avgPrice >= 3;
+  if (level === "low") return r.avgPrice >= 1;
+  return true;
 }
 
 export default function Home() {
   const [category, setCategory] = useState("All");
   const [searchDraft, setSearchDraft] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState("all");
-  const [selectedQuality, setSelectedQuality] = useState("all");
-  const [selectedSafety, setSelectedSafety] = useState("all");
+  const [priceLevel, setPriceLevel] = useState("all");
+  const [qualityLevel, setQualityLevel] = useState("all");
+  const [safetyLevel, setSafetyLevel] = useState("all");
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -314,11 +309,12 @@ export default function Home() {
             const categoryLabel = typeToCategory(rec.type);
             const { overallRating, overallStars, ratingCount } =
               computeOverallFromRatings(rec.ratings);
-              const avgQuality = computeAverageMetric(rec.ratings, "quality_rating");
-              const avgSafety = computeAverageMetric(rec.ratings, "safety_rating");
-              const rawPriceTier = Number(rec.price_range);
-              const priceTier =
-                Number.isFinite(rawPriceTier) && rawPriceTier > 0 ? rawPriceTier : 1;
+            const avgPrice = computeAverageMetric(rec.ratings, "price_rating");
+            const avgQuality = computeAverageMetric(rec.ratings, "quality_rating");
+            const avgSafety = computeAverageMetric(rec.ratings, "safety_rating");
+            const rawPriceTier = Number(rec.price_range);
+            const priceTier =
+              Number.isFinite(rawPriceTier) && rawPriceTier > 0 ? rawPriceTier : 1;
             return {
               recommendationId: rec.recommendation_id,
               category: categoryLabel === "Other" ? "All" : categoryLabel,
@@ -326,7 +322,7 @@ export default function Home() {
               description: rec.description,
               priceRange: formatPriceRange(rec.price_range),
               priceTier,
-              priceBucket: toPriceBucket(priceTier),
+              avgPrice,
               avgQuality,
               avgSafety,
               location: rec.location ?? "",
@@ -356,25 +352,24 @@ export default function Home() {
     const shouldShow = searchDraft.trim() !== "" || category !== "All";
     setIsFilterVisible(shouldShow);
     if (!shouldShow) {
-      setSelectedPrice("all");
-      setSelectedQuality("all");
-      setSelectedSafety("all");
+      setPriceLevel("all");
+      setQualityLevel("all");
+      setSafetyLevel("all");
     }
   }, [searchDraft, category]);
 
   const visible = useMemo(() => {
     const q = searchDraft.trim().toLowerCase();
-    
-    const filtered =cards.filter((r) => {
+
+    const filtered = cards.filter((r) => {
       const matchesCategory = category === "All" ? true : r.category === category;
       const matchesSearch =
         !q ||
         r.title.toLowerCase().includes(q) ||
         r.description.toLowerCase().includes(q);
-      //return matchesCategory && matchesSearch;
-      const matchesPrice = matchesPriceFilter(r, selectedPrice);
-      const matchesQuality = matchesQualityFilter(r, selectedQuality);
-      const matchesSafety = matchesSafetyFilter(r, selectedSafety);
+      const matchesPrice = checkPrice(r, priceLevel);
+      const matchesQuality = checkQuality(r, qualityLevel);
+      const matchesSafety = checkSafety(r, safetyLevel);
       return (
         matchesCategory &&
         matchesSearch &&
@@ -383,9 +378,20 @@ export default function Home() {
         matchesSafety
       );
     });
-  // }, //[cards, category, searchDraft]);return [...filtered].sort((a, b) => b.avgQuality - a.avgQuality);
-  return [...filtered].sort((a, b) => b.avgQuality - a.avgQuality);
-}, [cards, category, searchDraft, selectedPrice, selectedQuality, selectedSafety]);
+    function sortByActiveFilter(list) {
+      if (qualityLevel !== "all") {
+        return [...list].sort((a, b) => b.avgQuality - a.avgQuality);
+      }
+      if (safetyLevel !== "all") {
+        return [...list].sort((a, b) => b.avgSafety - a.avgSafety);
+      }
+      if (priceLevel !== "all") {
+        return [...list].sort((a, b) => b.avgPrice - a.avgPrice);
+      }
+      return list;
+    }
+    return sortByActiveFilter(filtered);
+  }, [cards, category, searchDraft, priceLevel, qualityLevel, safetyLevel]);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8">
@@ -434,12 +440,12 @@ export default function Home() {
             </div>
             {isFilterVisible ? (
               <FilterRow
-                selectedPrice={selectedPrice}
-                selectedQuality={selectedQuality}
-                selectedSafety={selectedSafety}
-                onPriceChange={setSelectedPrice}
-                onQualityChange={setSelectedQuality}
-                onSafetyChange={setSelectedSafety}
+                priceLevel={priceLevel}
+                qualityLevel={qualityLevel}
+                safetyLevel={safetyLevel}
+                onPriceChange={setPriceLevel}
+                onQualityChange={setQualityLevel}
+                onSafetyChange={setSafetyLevel}
               />
             ) : null}
           </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+import { useSession } from "next-auth/react"; // ✅ NEW
 import { apiJson } from "@/lib/api";
 import { typeLabel } from "@/lib/recommendations";
 
@@ -44,26 +44,40 @@ function ListCard({ children }) {
 }
 
 export default function ProfilePage() {
-  const { user, token, loading } = useAuth();
+  const { data: session, status } = useSession(); // ✅ NEW
   const router = useRouter();
+
   const [profile, setProfile] = useState(null);
   const [activity, setActivity] = useState(null);
   const [error, setError] = useState("");
 
+  // ✅ FIXED REDIRECT LOGIC
   useEffect(() => {
-    if (!loading && !token) router.replace("/login");
-  }, [loading, token, router]);
+    if (status === "loading") return;
+
+    if (!session) {
+      router.replace("/login");
+    }
+  }, [session, status, router]);
+
+  // ✅ Extract values from session
+  const userId = session?.user?.id;
+  const token = session?.accessToken;
 
   useEffect(() => {
     let cancelled = false;
+
     async function load() {
-      if (!token || !user?.user_id) return;
+      if (!token || !userId) return;
+
       setError("");
+
       try {
         const [profileData, activityData] = await Promise.all([
-          apiJson(`/api/v1/users/${user.user_id}`),
-          apiJson(`/api/v1/users/${user.user_id}/activity`, { token }),
+          apiJson(`/api/v1/users/${userId}`, { token }), // ✅ added token
+          apiJson(`/api/v1/users/${userId}/activity`, { token }),
         ]);
+
         if (!cancelled) {
           setProfile(profileData.user);
           setActivity(activityData);
@@ -72,13 +86,16 @@ export default function ProfilePage() {
         if (!cancelled) setError(err.message || "Failed to load profile");
       }
     }
+
     load();
+
     return () => {
       cancelled = true;
     };
-  }, [token, user?.user_id]);
+  }, [token, userId]);
 
-  if (loading || !token) {
+  // ✅ FIXED LOADING STATE
+  if (status === "loading" || !session) {
     return (
       <main className="mx-auto w-full max-w-6xl px-4 py-10">
         <p className="text-zinc-500">Loading…</p>
@@ -96,10 +113,10 @@ export default function ProfilePage() {
 
           <div className="flex-1">
             <div className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              {profile?.name ?? user?.name ?? "User"}
+              {profile?.name ?? session?.user?.name ?? "User"}
             </div>
             <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {profile?.email ?? user?.email ?? "—"}
+              {profile?.email ?? session?.user?.email ?? "—"}
             </div>
             <div className="mt-3 text-sm font-medium text-zinc-600 dark:text-zinc-400">
               Joined{" "}
@@ -184,4 +201,3 @@ export default function ProfilePage() {
     </main>
   );
 }
-
