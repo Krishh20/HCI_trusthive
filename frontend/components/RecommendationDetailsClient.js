@@ -412,23 +412,30 @@ export default function RecommendationDetailsClient({ rec }) {
         </div>
 
         {/* 4. TITLE SECTION */}
-        {editingPost ? (
-          <input
-            ref={titleInputRef}
-            value={recTitle}
-            onChange={(e) => setRecTitle(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-2xl font-bold text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        ) : (
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-            <span className="text-gray-900">{firstWord}</span>
-            {restWords && (
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 ml-2">
-                {restWords}
-              </span>
-            )}
-          </h1>
-        )}
+        <div className="flex flex-col gap-2">
+          {editingPost ? (
+            <input
+              ref={titleInputRef}
+              value={recTitle}
+              onChange={(e) => setRecTitle(e.target.value)}
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-2xl font-bold text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          ) : (
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+              <span className="text-gray-900">{firstWord}</span>
+              {restWords && (
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 ml-2">
+                  {restWords}
+                </span>
+              )}
+            </h1>
+          )}
+          {rec.author?.name && (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Posted by {rec.author.name}
+            </div>
+          )}
+        </div>
 
         {/* 5. RATING ROW */}
         <div className="flex items-center gap-2 text-sm text-gray-600">
