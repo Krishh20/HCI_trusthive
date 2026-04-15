@@ -355,7 +355,7 @@ export default function NewRecommendationPage() {
               ) : (
                 <>
                   <p className="text-sm font-medium text-gray-700">Click to upload photo</p>
-                  <p className="text-xs text-gray-500 mt-1 mb-4">PNG, JPG, GIF up to 3 MB</p>
+                  <p className="text-xs text-gray-500 mt-1 mb-4">PNG, JPG, GIF up to 500 KB</p>
                   <div className="px-5 py-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-600 shadow-sm group-hover:border-indigo-300 group-hover:text-indigo-600 transition-colors">
                     Choose File
                   </div>

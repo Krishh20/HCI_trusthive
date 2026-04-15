@@ -349,7 +349,7 @@ export default function RecommendationDetailsClient({ rec }) {
         method: "DELETE",
         token,
       });
-      router.push("/recommendations");
+      router.push("/");
       router.refresh();
     } catch (err) {
       setError(err.message || "Could not delete post");
