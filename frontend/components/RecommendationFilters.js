@@ -42,7 +42,7 @@ export default function RecommendationFilters() {
             defaultValue={searchParams.get("search") ?? ""}
             maxLength={200}
             placeholder="e.g. mess, hospital, cafe"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
           />
         </label>
         <button
@@ -56,7 +56,7 @@ export default function RecommendationFilters() {
         <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
           Type
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             value={searchParams.get("type") ?? ""}
             onChange={(e) => setParam("type", e.target.value)}
           >
@@ -71,7 +71,7 @@ export default function RecommendationFilters() {
         <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
           Price
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             value={searchParams.get("price") ?? ""}
             onChange={(e) => setParam("price", e.target.value)}
           >
@@ -83,7 +83,7 @@ export default function RecommendationFilters() {
         <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
           Avg. rating
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             value={searchParams.get("rating") ?? ""}
             onChange={(e) => setParam("rating", e.target.value)}
           >
@@ -96,7 +96,7 @@ export default function RecommendationFilters() {
         <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
           Sort
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             value={searchParams.get("sort") ?? "created_at"}
             onChange={(e) => setParam("sort", e.target.value)}
           >

@@ -9,7 +9,7 @@ export default function FilterRow({
   onSafetyChange,
 }) {
   const selectClass =
-    "h-9 rounded-full border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 outline-none ring-zinc-900/10 focus:ring-2 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100";
+    "h-9 rounded-full border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 outline-none ring-zinc-900/10 focus:ring-2 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100";
 
   return (
     <div className="-mx-1 flex flex-wrap items-center gap-2 px-1 pb-1">

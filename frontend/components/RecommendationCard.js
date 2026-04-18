@@ -5,7 +5,7 @@ export default function RecommendationCard({ rec }) {
   return (
     <Link
       href={`/recommendations/${rec.recommendation_id}`}
-      className="group block rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:shadow dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
+      className="group block rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:shadow dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
     >
       {Array.isArray(rec.image_urls) && rec.image_urls[0] ? (
         <div className="mb-3 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
@@ -32,7 +32,7 @@ export default function RecommendationCard({ rec }) {
       <p className="mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
         {rec.description}
       </p>
-      <p className="mt-3 text-xs text-zinc-500">
+      <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400">
         {rec.author?.name ?? "Unknown"}
         {rec.created_at
           ? ` · ${new Date(rec.created_at).toLocaleDateString()}`

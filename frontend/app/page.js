@@ -122,16 +122,16 @@ function Stars({ value, outOf = 5, size = "h-4 w-4", interactive = false, onChan
 function RecommendationCardModern({ rec }) {
   return (
     <Link href={rec.href} className="block group">
-      <article className="bg-white rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 overflow-hidden h-full flex flex-col border border-transparent">
+      <article className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 overflow-hidden h-full flex flex-col border border-zinc-200 dark:border-zinc-800">
         {rec.imageUrl ? (
-          <div className="relative h-40 sm:h-48 overflow-hidden bg-gray-100 shrink-0 border-b border-gray-100">
+          <div className="relative h-40 sm:h-48 overflow-hidden bg-gray-100 dark:bg-zinc-800 shrink-0 border-b border-gray-100 dark:border-zinc-800">
             <img
               src={rec.imageUrl}
               alt={rec.title}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
             />
-            <div className="absolute top-3 left-3 bg-white/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 shadow-sm">
+            <div className="absolute top-3 left-3 bg-white/80 dark:bg-zinc-900/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 dark:text-zinc-100 shadow-sm">
               {rec.category}
             </div>
             <div className="absolute top-3 right-3 text-xs font-medium text-white shadow-sm drop-shadow-md">
@@ -139,27 +139,27 @@ function RecommendationCardModern({ rec }) {
             </div>
           </div>
         ) : (
-          <div className="relative h-40 sm:h-48 overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50 shrink-0 flex items-center justify-center border-b border-gray-100/50">
-            <span className="text-indigo-200 font-medium">No Image</span>
-            <div className="absolute top-3 left-3 bg-white/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 shadow-sm">
+          <div className="relative h-40 sm:h-48 overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-zinc-800 dark:to-zinc-800 shrink-0 flex items-center justify-center border-b border-gray-100/50 dark:border-zinc-800">
+            <span className="text-indigo-200 dark:text-zinc-600 font-medium">No Image</span>
+            <div className="absolute top-3 left-3 bg-white/80 dark:bg-zinc-900/80 backdrop-blur rounded-full px-3 py-1 text-xs font-medium text-gray-900 dark:text-zinc-100 shadow-sm">
               {rec.category}
             </div>
-            <div className="absolute top-3 right-3 text-xs font-medium text-gray-500">
+            <div className="absolute top-3 right-3 text-xs font-medium text-gray-500 dark:text-zinc-400">
               {rec.date}
             </div>
           </div>
         )}
 
         <div className="p-5 flex flex-col flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-zinc-100 line-clamp-1">
             {rec.title}
           </h3>
-          <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400 line-clamp-2">
             {rec.description}
           </p>
 
           <div className="mt-auto pt-4 space-y-3">
-            <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center justify-between text-sm text-gray-500 dark:text-zinc-400">
               <div className="flex items-center gap-1.5 line-clamp-1">
                 <IconLocation className="h-4 w-4 shrink-0" />
                 <span className="truncate">{rec.location || "N/A"}</span>
@@ -167,19 +167,19 @@ function RecommendationCardModern({ rec }) {
               <span className="shrink-0 font-medium text-xs">{rec.priceRange}</span>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-50">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-50 dark:border-zinc-800">
               <div className="flex items-center gap-1.5">
                 <Stars value={rec.overallStars} size="h-3.5 w-3.5" />
                 <div className="flex items-baseline gap-1 text-xs">
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-gray-900 dark:text-zinc-100">
                     {Number(rec.overallRating).toFixed(1)}
                   </span>
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-zinc-400">
                     ({rec.ratingCount})
                   </span>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-medium text-indigo-600 group-hover:text-indigo-700 transition-colors">
+              <div className="flex items-center text-xs font-medium text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">
                 Read more <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
               </div>
             </div>
@@ -434,29 +434,29 @@ export default function Home() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8 min-h-screen">
       {/* HERO SECTION */}
-      <section className="rounded-3xl bg-gradient-to-r from-purple-100 via-indigo-100 to-pink-100 p-10 sm:p-16 shadow-lg shadow-indigo-100/50 mb-12 relative overflow-hidden">
+      <section className="rounded-3xl bg-gradient-to-r from-purple-100 via-indigo-100 to-pink-100 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-10 sm:p-16 shadow-lg shadow-indigo-100/50 dark:shadow-none mb-12 relative overflow-hidden">
         {/* subtle glow effect via an absolute div */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/40 blur-3xl rounded-full pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/40 dark:bg-white/5 blur-3xl rounded-full pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="inline-flex items-center justify-center rounded-full bg-white/60 backdrop-blur px-4 py-1.5 text-sm font-medium text-indigo-800 mb-6 shadow-sm">
+          <div className="inline-flex items-center justify-center rounded-full bg-white/60 dark:bg-zinc-800/60 backdrop-blur px-4 py-1.5 text-sm font-medium text-indigo-800 dark:text-indigo-300 mb-6 shadow-sm">
             ✨ Community Powered
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
             Campus Community<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
               Recommendations
             </span>
           </h1>
 
-          <p className="mt-4 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="mt-4 text-base sm:text-lg text-gray-600 dark:text-zinc-400 max-w-2xl mx-auto mb-8">
             Discover trusted picks from your campus — curated by the community for the community.
           </p>
 
           <div className="w-full max-w-xl relative">
             <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-5 w-5 text-gray-400 dark:text-zinc-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
             </div>
@@ -465,7 +465,7 @@ export default function Home() {
               placeholder="Search recommendations..."
               value={searchDraft}
               onChange={(e) => setSearchDraft(e.target.value)}
-              className="w-full rounded-full border-0 bg-white shadow-md pl-12 pr-6 py-4 text-base text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow transition-colors placeholder:text-gray-400"
+              className="w-full rounded-full border-0 bg-white dark:bg-zinc-900 shadow-md pl-12 pr-6 py-4 text-base text-gray-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow transition-colors placeholder:text-gray-400 dark:placeholder:text-zinc-500"
             />
           </div>
         </div>
@@ -475,7 +475,7 @@ export default function Home() {
       <section className="mb-8">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">Discovery Feed</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Discovery Feed</h2>
             <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
               {FILTER_OPTIONS.map((opt) => {
                 const active = opt === category;
@@ -487,8 +487,8 @@ export default function Home() {
                     className={[
                       "shrink-0 rounded-full px-5 py-2 text-xs sm:text-sm font-medium transition-all duration-200",
                       active
-                        ? "bg-indigo-600 text-white shadow-md hover:scale-105"
-                        : "bg-white border border-gray-200 text-gray-700 hover:scale-105 hover:border-indigo-300 hover:text-indigo-600",
+                        ? "bg-indigo-600 text-white shadow-md hover:scale-105 dark:bg-indigo-500"
+                        : "bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-zinc-300 hover:scale-105 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400",
                     ].join(" ")}
                     aria-pressed={active}
                   >
@@ -518,17 +518,17 @@ export default function Home() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-80 animate-pulse rounded-2xl bg-gray-200"
+                className="h-80 animate-pulse rounded-2xl bg-gray-200 dark:bg-zinc-800"
               />
             ))}
           </div>
         ) : error ? (
-          <p className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+          <p className="rounded-2xl border border-red-100 dark:border-red-900 bg-red-50 dark:bg-red-950/50 p-4 text-sm text-red-600 dark:text-red-400">
             {error}
           </p>
         ) : visible.length === 0 ? (
-          <div className="py-12 text-center bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <p className="text-gray-500">No recommendations match your filters.</p>
+          <div className="py-12 text-center bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
+            <p className="text-gray-500 dark:text-zinc-400">No recommendations match your filters.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -543,7 +543,7 @@ export default function Home() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="rounded-3xl bg-gradient-to-r from-purple-500 to-indigo-500 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-indigo-200/50">
+      <section className="rounded-3xl bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-indigo-200/50 dark:shadow-none">
         <div className="flex items-center gap-4 text-white text-center md:text-left">
           <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center shrink-0 backdrop-blur hidden sm:flex">
             <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -551,7 +551,7 @@ export default function Home() {
             </svg>
           </div>
           <div>
-            <h3 className="text-2xl font-bold">Share your campus secrets</h3>
+            <h3 className="text-2xl font-bold text-white">Share your campus secrets</h3>
             <p className="mt-1 text-indigo-100 text-sm">Help others discover the best spots around campus.</p>
           </div>
         </div>
